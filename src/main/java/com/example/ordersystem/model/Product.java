@@ -6,14 +6,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
-@Entity
+@Entity // This annotation specifies that the class is an entity and is mapped to a database table.
 @Data // Using Lombok to automatically generate getters, setters, equals, hash, and toString methods
 public class Product {
-    @Id // Auto-increment ID
+    @Id // This annotation specifies the primary key of an entity.
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // This annotation provides the specification of generation strategies for the values of primary keys.
     private Long id;
-    private String name;
-    private String type;
-    private Double price;
-    private Integer quantity;
+
+    private String name;        // Name of the product
+    private String type;        // Type of the product
+    private Double price;       // Price of the product
+    private Integer quantity;   // Quantity of the product
 }

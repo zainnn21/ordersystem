@@ -1,5 +1,6 @@
 package com.example.ordersystem.controller;
 
+import com.example.ordersystem.dto.OrderCartDTO;
 import com.example.ordersystem.model.OrderCart;
 import com.example.ordersystem.service.OrderCartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,33 +10,35 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/order-cart")//Base URL for order cart API
+@RestController // This annotation is used to create RESTful web services using Spring MVC.
+@RequestMapping("/api/order-cart") // This annotation maps HTTP requests to handler methods of MVC and REST controllers.
 public class OrderCartController {
-    @Autowired
+    @Autowired // This annotation allows Spring to resolve and inject collaborating beans into your bean.
     private OrderCartService orderCartService;
 
     //Endpoint to retrieve an order cart by ID
     @GetMapping("/{id}")
-    public ResponseEntity<OrderCart> getOrderCartById(@PathVariable Long id) {
+    public ResponseEntity<OrderCartDTO> getOrderCartById(@PathVariable Long id) {
         Optional<OrderCart> orderCart = orderCartService.getOrderCartById(id);
-        return orderCart.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+        return orderCart.map(value -> new ResponseEntity<>(orderCartService.toDTO(value), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     //Endpoint to create new order cart
     @PostMapping
-    public ResponseEntity<OrderCart> createOrderCart(@RequestBody OrderCart orderCart) {
-        return new ResponseEntity<>(orderCartService.saveOrderCart(orderCart), HttpStatus.CREATED);
+    public ResponseEntity<OrderCartDTO> createOrderCart(@RequestBody OrderCartDTO orderCartDTO) {
+        OrderCart orderCart = orderCartService.toEntity(orderCartDTO);
+        return new ResponseEntity<>(orderCartService.toDTO(orderCartService.saveOrderCart(orderCart)), HttpStatus.CREATED);
     }
 
     // Endpoint to update an existing order cart by ID
     @PutMapping("/{id}")
-    public ResponseEntity<OrderCart> updateOrderCart(@PathVariable Long id, @RequestBody OrderCart orderCart) {
+    public ResponseEntity<OrderCart> updateOrderCart(@PathVariable Long id, @RequestBody OrderCartDTO orderCartDTO) {
         Optional<OrderCart> existingOrderCart = orderCartService.getOrderCartById(id);
         if (existingOrderCart.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        OrderCart orderCart = orderCartService.toEntity(orderCartDTO);
         orderCart.setId(id);
         return new ResponseEntity<>(orderCartService.saveOrderCart(orderCart), HttpStatus.OK);
     }
