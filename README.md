@@ -12,8 +12,8 @@ This is a Spring Boot (Java) REST API project for a simple mobile place order sy
 4. Follows REST API design best practices.
 
 ## Technologies
-* Java 11
-* Spring Boot 2.5.4
+* Java 17
+* Spring Boot 3.3.0
 * Spring Data JPA
 * H2 Database
 * Gradle
