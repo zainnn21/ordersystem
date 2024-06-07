@@ -1,17 +1,34 @@
 package com.example.ordersystem.model;
 
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data // Lombok annotation to generate getters, setters, toString, equals, and hashcode methods.
-@Embeddable // This annotation specifies that the class can be embedded in another entity.
+@Entity
+@NoArgsConstructor
 public class OrderItem {
-    private String productName; // Name of the product
-    private String productType; // Type of the product
-    private Double productPrice; // Price of the product
-    private Integer quantity; // Quantity of the product
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Double getTotal() {
-        return productPrice * quantity;
-    } // Calculates the total price for the quantity of products.
+    @ManyToOne
+    @JoinColumn(name = "order_cart_id")
+    private OrderCart orderCart;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    private int quantity;
+
+    public OrderItem(Product product, int quantity) {
+        this.product = product;
+        this.quantity = quantity;
+    }
+
+    @Transient // Not a persistent field, derived
+    public double getTotalPrice() {
+        return product.getPrice() * quantity;
+    }
 }

@@ -5,9 +5,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity // This annotation specifies that the class is an entity and is mapped to a database table.
 @Data // Using Lombok to automatically generate getters, setters, equals, hash, and toString methods
+@NoArgsConstructor
 public class Product {
     @Id // This annotation specifies the primary key of an entity.
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +18,13 @@ public class Product {
 
     private String name;        // Name of the product
     private String type;        // Type of the product
-    private Double price;       // Price of the product
-    private Integer quantity;   // Quantity of the product
+    private double price;       // Price of the product
+    private int quantity;       // Quantity of the product
+
+    public Product(String name, String type, double price, int quantity) {
+        this.name = name;
+        this.type = type;
+        this.price = price;
+        this.quantity = quantity;
+    }
 }
