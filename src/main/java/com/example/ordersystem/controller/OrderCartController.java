@@ -1,10 +1,7 @@
 package com.example.ordersystem.controller;
 
 import com.example.ordersystem.dto.OrderCartDTO;
-import com.example.ordersystem.dto.OrderItemDTO;
 import com.example.ordersystem.model.OrderCart;
-import com.example.ordersystem.model.OrderItem;
-import com.example.ordersystem.model.Product;
 import com.example.ordersystem.service.OrderCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -65,4 +62,10 @@ public class OrderCartController {
         return ResponseEntity.noContent().build();
     }
 
+    //Endpoint to Place an order
+    @PostMapping("/{orderCartId}/place-order")
+    public ResponseEntity<OrderCartDTO> placeOrder(@PathVariable Long orderCartId) {
+        OrderCart updatedOrderCart = orderCartService.placeOrder(orderCartId);
+        return ResponseEntity.ok(new OrderCartDTO(updatedOrderCart));
+    }
 }

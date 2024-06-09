@@ -21,10 +21,4 @@ public class Product {
     private double price;       // Price of the product
     private int quantity;       // Quantity of the product
 
-    public Product(String name, String type, double price, int quantity) {
-        this.name = name;
-        this.type = type;
-        this.price = price;
-        this.quantity = quantity;
-    }
 }

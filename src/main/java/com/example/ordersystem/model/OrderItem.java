@@ -22,6 +22,8 @@ public class OrderItem {
 
     private int quantity;
 
+    private double totalPrice;
+
     public OrderItem(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;

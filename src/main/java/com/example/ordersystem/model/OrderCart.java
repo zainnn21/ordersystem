@@ -21,10 +21,6 @@ public class OrderCart {
     @OneToMany(mappedBy = "orderCart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
-    public OrderCart(String customer, String address) {
-        this.customer = customer;
-        this.address = address;
-    }
 
     @Transient // not a persistent field, derived
     public double getTotalPrice() {

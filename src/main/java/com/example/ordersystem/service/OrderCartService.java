@@ -15,7 +15,6 @@ public class OrderCartService {
     @Autowired // This annotation allows Spring to resolve and inject collaborating beans into your bean.
     private OrderCartRepository orderCartRepository;
 
-
     @Autowired
     private ProductRepository productRepository;
 
@@ -34,6 +33,7 @@ public class OrderCartService {
         orderCartRepository.deleteById(id);
     }
 
+    //Add product to order cart
     public OrderCart addProductToCart(Long orderCartId, Long productId, int quantity) {
         Optional<OrderCart> orderCartOpt = orderCartRepository.findById(orderCartId);
         Optional<Product> productOpt = productRepository.findById(productId);
@@ -47,6 +47,24 @@ public class OrderCartService {
         } else {
             throw new RuntimeException("Order cart or product not found");
         }
+    }
+
+    // Place an order, reducing product quantities
+    public OrderCart placeOrder(Long orderCartId) {
+        // Retrieve the order cart from the repository
+        OrderCart orderCart = orderCartRepository.findById(orderCartId).orElseThrow();
+
+        // Iterate over each item in the order cart
+        for(OrderItem item : orderCart.getItems()) {
+            // Retrieve the product and reduce its quantity based on the order item
+            Product product = item.getProduct();
+            int quantity = item.getQuantity();
+            product.setQuantity(product.getQuantity() - quantity);
+            // Save the updated product back to the repository
+            productRepository.save(product);
+        }
+        // Save and return the placed order cart
+        return orderCartRepository.save(orderCart);
     }
 }
 
