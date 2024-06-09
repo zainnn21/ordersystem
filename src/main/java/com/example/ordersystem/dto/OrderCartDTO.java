@@ -19,7 +19,9 @@ public class OrderCartDTO {
         this.id = orderCart.getId();
         this.customer = orderCart.getCustomer();
         this.address = orderCart.getAddress();
-        this.items = orderCart.getItems() != null ? orderCart.getItems().stream().map(OrderItemDTO::new).collect(Collectors.toList()) : new ArrayList<>();
+        this.items = orderCart.getItems() != null
+                ? orderCart.getItems().stream().map(OrderItemDTO::new).collect(Collectors.toList())
+                : new ArrayList<>();
         this.totalPrice = orderCart.getTotalPrice();
     }
 }

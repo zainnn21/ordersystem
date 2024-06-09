@@ -26,6 +26,11 @@ public class OrderCart {
         this.address = address;
     }
 
+    @Transient // not a persistent field, derived
+    public double getTotalPrice() {
+        return items.stream().mapToDouble(OrderItem::getTotalPrice).sum();
+    };
+
     public void addItem(OrderItem item) {
         items.add(item);
         item.setOrderCart(this);
@@ -37,12 +42,8 @@ public class OrderCart {
     }
 
 
-    @Transient // This annotation specifies that the field is not persistent.
-    private Double total; // Total price of the order cart
+//    @Transient // This annotation specifies that the field is not persistent.
+//    private Double total; // Total price of the order cart
 
-    @Transient // not a persistent field, derived
-    public double getTotalPrice() {
-        return items.stream().mapToDouble(OrderItem::getTotalPrice).sum();
-    };
 
 }

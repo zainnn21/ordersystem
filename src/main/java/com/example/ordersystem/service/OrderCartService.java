@@ -4,7 +4,6 @@ import com.example.ordersystem.model.OrderCart;
 import com.example.ordersystem.model.OrderItem;
 import com.example.ordersystem.model.Product;
 import com.example.ordersystem.repository.OrderCartRepository;
-import com.example.ordersystem.repository.OrderItemRepository;
 import com.example.ordersystem.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +15,6 @@ public class OrderCartService {
     @Autowired // This annotation allows Spring to resolve and inject collaborating beans into your bean.
     private OrderCartRepository orderCartRepository;
 
-    @Autowired
-    private OrderItemRepository orderItemRepository;
 
     @Autowired
     private ProductRepository productRepository;
@@ -37,33 +34,19 @@ public class OrderCartService {
         orderCartRepository.deleteById(id);
     }
 
-    public OrderItem addProductToCart(Long cartId, Long productId, int quantity) {
-        Optional<OrderCart> orderCartOpt = orderCartRepository.findById(cartId);
-        Optional<Product> productOpt = productRepository.findById(productId); // Retrieve product by ID>
+    public OrderCart addProductToCart(Long orderCartId, Long productId, int quantity) {
+        Optional<OrderCart> orderCartOpt = orderCartRepository.findById(orderCartId);
+        Optional<Product> productOpt = productRepository.findById(productId);
 
         if (orderCartOpt.isPresent() && productOpt.isPresent()) {
             OrderCart orderCart = orderCartOpt.get();
             Product product = productOpt.get();
-
-            // check if the product is already exists in the cart
-            Optional<OrderItem> existingItemOpt = orderCart.getItems().stream().filter(item -> item.getProduct().getId().equals(productId)).findFirst();
-
-            OrderItem orderItem;
-            if (existingItemOpt.isPresent()) {
-                orderItem = existingItemOpt.get();
-                orderItem.setQuantity(orderItem.getQuantity() + quantity);
-            } else {
-                orderItem = new OrderItem();
-                orderItem.setOrderCart(orderCart);
-                orderItem.setProduct(product);
-                orderItem.setQuantity(quantity);
-                orderCart.getItems().add(orderItem);
-            }
-            orderItemRepository.save(orderItem);
-            orderCartRepository.save(orderCart);
-            return orderItem;
+            OrderItem orderItem = new OrderItem(product, quantity);
+            orderCart.addItem(orderItem);
+            return orderCartRepository.save(orderCart);
+        } else {
+            throw new RuntimeException("Order cart or product not found");
         }
-        return null;
     }
 }
 

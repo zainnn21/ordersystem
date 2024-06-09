@@ -6,7 +6,6 @@ import com.example.ordersystem.model.OrderCart;
 import com.example.ordersystem.model.OrderItem;
 import com.example.ordersystem.model.Product;
 import com.example.ordersystem.service.OrderCartService;
-import com.example.ordersystem.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,6 @@ public class OrderCartController {
     @Autowired // This annotation allows Spring to resolve and inject collaborating beans into your bean.
     private OrderCartService orderCartService;
 
-    @Autowired
-    private ProductService productService;
 
     //Endpoint to retrieve an order cart by ID
     @GetMapping("/{id}")
@@ -38,26 +35,14 @@ public class OrderCartController {
         return ResponseEntity.ok(new OrderCartDTO(savedOrderCart));
     }
 
+    //Endpoint to add product to order cart
     @PostMapping("/{orderCartId}/add-product")
     public ResponseEntity<OrderCartDTO> addProductToCart(
             @PathVariable Long orderCartId,
-            @RequestBody OrderItemDTO orderItemDTO){
-        Optional<OrderCart> orderCartOpt = orderCartService.getOrderCartById(orderCartId);
-        if (orderCartOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Optional<Product> optionalProduct = productService.getProductById(orderItemDTO.getId());
-        if(optionalProduct.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        OrderCart orderCart = orderCartOpt.get();
-        Product product = optionalProduct.get();
-        OrderItem orderItem = new OrderItem(product, orderItemDTO.getQuantity());
-        orderCart.addItem(orderItem);
-        orderCartService.saveOrderCart(orderCart);
-        return ResponseEntity.ok(new OrderCartDTO(orderCart));
+            @RequestParam Long productId,
+            @RequestParam int quantity){
+        OrderCart updatedOrderCart = orderCartService.addProductToCart(orderCartId, productId, quantity);
+        return ResponseEntity.ok(new OrderCartDTO(updatedOrderCart));
     }
 
     // Endpoint to update an existing order cart by ID

@@ -1,5 +1,6 @@
 package com.example.ordersystem.controller;
 
+import com.example.ordersystem.dto.ProductDTO;
 import com.example.ordersystem.model.Product;
 import com.example.ordersystem.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,12 @@ public class ProductController {
 
     // Endpoint to get all products with pagination
     @GetMapping
-    public Page<Product> getAllProducts(@RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "10") int size){
-        return productService.getAllProducts(page,size);
+    public ResponseEntity<Page<ProductDTO>> getProduct(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Product> products = productService.getAllProducts(page, size);
+        Page<ProductDTO> productDTOs = products.map(ProductDTO::new);
+        return ResponseEntity.ok(productDTOs);
     }
 
     // Endpoint to get a product by ID
