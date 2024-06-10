@@ -15,31 +15,26 @@ public class OrderCart {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increment
     private Long id;
 
-    private String customer;
-    private String address;
+    private String customer; // The name of the customer
+    private String address;  // The address of the customer
 
+
+    // One-to-many relationship with OrderItem, cascade all operations, and remove orphan items
     @OneToMany(mappedBy = "orderCart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
 
     @Transient // not a persistent field, derived
     public double getTotalPrice() {
+        // Calculates the total price by summing up the total price of each order item.
         return items.stream().mapToDouble(OrderItem::getTotalPrice).sum();
     };
 
+    // Adds an item to the order cart and sets the orderCart reference in the item.
     public void addItem(OrderItem item) {
         items.add(item);
         item.setOrderCart(this);
     }
-
-    public void removeItem(OrderItem item) {
-        items.remove(item);
-        item.setOrderCart(null);
-    }
-
-
-//    @Transient // This annotation specifies that the field is not persistent.
-//    private Double total; // Total price of the order cart
 
 
 }
