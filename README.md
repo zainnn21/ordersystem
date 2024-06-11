@@ -56,46 +56,24 @@ The application will start on http://localhost:8080.
 * Delete Product ```DELETE /api/products/{id}```
 
 ### Order Cart Endpoints
-* Create Order Cart ```POST /api/order-carts```
+* Create Order Cart ```POST /api/order-cart```
   * Body
 ```
 {
-    "customer": "TomJerry",
-    "address": "Jl. Tali 7 No.9, Jakarta Barat",
-    "items": [
-        {
-            "productName": "Head First Java",
-            "productType": "Book",
-            "productPrice": 350000.0,
-            "quantity": 2
-        },
-        {
-            "productName": "Professional Apache Tomcat 8",
-            "productType": "Book",
-            "productPrice": 300000.0,
-            "quantity": 1
-        }
-    ]
+  "customer": "TomJerry",
+  "address": "Jl. Tali 7 No.9, Jakarta Barat"
 }
 ```
-* Get Order Cart by ID ```GET /api/order-carts/{id}```
-* Update Order Cart ```PUT /api/order-carts/{id}```
-  * Body
-```
-{
-    "customer": "Updated TomJerry",
-    "address": "Updated Address",
-    "items": [
-        {
-            "productName": "Updated Book",
-            "productType": "Book",
-            "productPrice": 400000.0,
-            "quantity": 3
-        }
-    ]
-}
-```
-* Delete Order Cart ```DELETE /api/order-carts/{id}```
+
+* Add Product To Ordercart ```POST /api/order-cart/{orderCartId}/add-product```
+* Parameters:
+   * productId: ID dari produk yang akan ditambahkan.
+   * quantity: Jumlah produk yang akan ditambahkan
+   
+* Get Order Cart by ID ```GET /api/order-cart/{id}```
+
+* Delete Order Cart ```DELETE /api/order-cart/{id}```
+
 ## Testing with Postman
 1. Start the Spring Boot application.
 2. Open Postman and create requests for each endpoint as shown in the API Endpoints section.
