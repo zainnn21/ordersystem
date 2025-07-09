@@ -10,7 +10,6 @@ This is a Spring Boot (Java) REST API project for a simple mobile place order sy
 2. API for adding new products to the order cart.
 3. API for managing the order cart: displaying the cart and placing orders.
 4. Follows REST API design best practices.
-5. 
 
 ## Technologies
 * Java 17
